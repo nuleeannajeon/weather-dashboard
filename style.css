@@ -1,7 +1,42 @@
-.row {
-    height: 15rem;
+/* body {
+    font-family: 'Open Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1;
+  } */
+
+header {
+    font-size: 40px;
+}
+
+h3 {
+    padding-left: 10px;;
+    
+}
+
+.current-weather {
+    border: 1px solid lightgrey;
+    border-radius: 3px;
+    height: 300px;
+    margin: 20px 10px;
+    padding-top: 30px;
+    padding-left: 15px;
+    line-height: 2;
+}
+
+.info {
+    font-size: 20px;
 }
 
 .col {
-    border: 1px solid black;
+    width: 100%;
+    height: 10rem;
+    text-align: center;
+}
+
+.first-day {
+    margin-left: 10px;
+}
+
+.fifth-day {
+    margin-right: 20px;
 }
