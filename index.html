@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-dark bg-dark justify-content-center" style="color:white;">
+            Weather Dashboard
+        </nav>
+    </header>
+    <main>
+        <div class="row">
+            <div class="col-md-4 bg-light">
+                <nav class="navbar navbar-light bg-light">
+                    <label>Search for a City:</label>
+                        <input id="searchCity" class="form-control" type="search" placeholder="" >
+                        <button class="btn btn-outline-success my-2" onclick="fetchWeather()" type="submit">Search</button>
+                    
+                </nav>
+                <div class="list-group">
+                      <!-- .active javascript? -->
+                    <!-- <button type="button" class="list-group-item list-group-item-action">Toronto</button>
+                    <button type="button" class="list-group-item list-group-item-action">Montreal</button>
+                    <button type="button" class="list-group-item list-group-item-action">Ottawa</button>
+                    <button type="button" class="list-group-item list-group-item-action">Calgary</button>
+                    <button type="button" class="list-group-item list-group-item-action">Vancouver</button> -->
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="toronto-weather" style="border: 1px solid black;">
+                    <h2 class='city-name'>-</h2>
+                    <div class='temperature'>-</div>
+                    <div class='humidity'>-</div>
+                    <div class='wind-speed'>-</div>
+                    <div class='uv-index'>-</div>
+                </div>
+                <div class="forcast">
+                    <h3>5-Day Forcast:</h3>
+                    <div class="row">
+                        <div class="col first-day">
+                            <div class='date-one'>-</div>
+                            <div class='icon-one'>-</div>
+                            <div class='temp-one'>-</div>
+                            <div class='humid-one'>-</div>
+                        </div>
+                        <div class="col second-day">
+                            <div class='date-two'>-</div>
+                            <div class='icon-two'>-</div>
+                            <div class='temp-two'>-</div>
+                            <div class='humid-two'>-</div>
+                        </div>
+                        <div class="col third-day">
+                            <div class='date-three'>-</div>
+                            <div class='icon-three'>-</div>
+                            <div class='temp-three'>-</div>
+                            <div class='humid-three'>-</div>
+                        </div>
+                        <div class="col fourth-day">
+                            <div class='date-four'>-</div>
+                            <div class='icon-four'>-</div>
+                            <div class='temp-four'>-</div>
+                            <div class='humid-four'>-</div>
+                        </div>
+                        <div class="col fifth-day">
+                            <div class='date-five'>-</div>
+                            <div class='icon-five'>-</div>
+                            <div class='temp-five'>-</div>
+                            <div class='humid-five'>-</div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </main>
+    
+
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script> -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+    async function fetchWeather(){
+        console.log(`it should be fetching something`);
+
+        var city = document.querySelector('#searchCity').value;
+
+        var APIkey = "166a433c57516f51dfab1f7edaed8413";
+        var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+ city + "&appid=" + APIkey;
+
+        $.ajax({ url: queryURL, method: "GET" }).then( displayWeather ) ;
+    }
+
+    function displayWeather ( cityData ) {
+        console.log (`[displayWeather]`, cityData);
+
+        document.querySelector('.city-name').textContent = cityData.name;
+
+        var iconURL = "http://openweathermap.org/img/w/" + cityData.weather[0].icon + ".png";
+
+        console.log (`[display iconURL`, iconURL);
+        var cityIcon = $("<img>");
+        cityIcon.attr("src", iconURL);
+        $('.city').append(cityIcon); 
+
+        // $('<img>').attr('src', iconURL);
+        // document.querySelectorAll('img').setAttribute('src', iconURL);
+
+        document.querySelector('.temperature').textContent = `Temperature: `+ (cityData.main.temp - 273.15).toFixed(1) + `°C`;
+        document.querySelector('.humidity').textContent = `Humidity: `+ cityData.main.humidity + `%`;
+        document.querySelector('.wind-speed').textContent = `Wind Speed: ` + (cityData.wind.speed * 2.2369).toFixed(1) + ` MPH`;
+
+        var latitude = cityData.coord.lat;
+        var longitude = cityData.coord.lon;
+        fetchUVindex (latitude, longitude);
+
+    }
+
+    function fetchUVindex (latitude, longitude) {
+        var APIkey = "166a433c57516f51dfab1f7edaed8413";
+        var uvURL = "http://api.openweathermap.org/data/2.5/uvi?appid=" + APIkey + "&lat=" + latitude + "&lon=" + longitude;
+        $.ajax({ url: uvURL, method: "GET" }).then( displayUVindex )
+
+    }
+    function displayUVindex (UVindexData) {
+        console.log ('[displayUVindex', UVindexData);
+        document.querySelector('.uv-index').textContent = `UV Index: ` + UVindexData.value ;
+
+        fetchForecast();
+    }
+
+    function fetchForecast () {    
+        var city = document.querySelector('#searchCity').value;
+        var APIkey = "166a433c57516f51dfab1f7edaed8413";
+        var forecastURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" +APIkey;
+
+        $.ajax({ url: forecastURL, method: "GET" }).then( displayForecast ) ;
+    }
+
+    function displayForecast (forecastData) {
+        console.log(`[display forecastAPI]`, forecastData );
+
+        document.querySelector('.temp-one').textContent = `Temp: `+ (forecastData.list[5].main.temp - 273.15).toFixed(1) + `°C`;
+        document.querySelector('.temp-two').textContent = `Temp: `+ (forecastData.list[13].main.temp - 273.15).toFixed(1) + `°C`;
+        document.querySelector('.temp-three').textContent = `Temp: `+ (forecastData.list[21].main.temp - 273.15).toFixed(1) + `°C`;
+        document.querySelector('.temp-four').textContent = `Temp: `+ (forecastData.list[29].main.temp - 273.15).toFixed(1) + `°C`;
+        document.querySelector('.temp-five').textContent = `Temp: `+ (forecastData.list[37].main.temp - 273.15).toFixed(1) + `°C`;
+
+        document.querySelector('.humid-one').textContent = `Humidity: `+ forecastData.list[5].main.humidity + `%`;
+        document.querySelector('.humid-two').textContent = `Humidity: `+ forecastData.list[13].main.humidity + `%`;
+        document.querySelector('.humid-three').textContent = `Humidity: `+ forecastData.list[21].main.humidity + `%`;
+        document.querySelector('.humid-four').textContent = `Humidity: `+ forecastData.list[29].main.humidity + `%`;
+        document.querySelector('.humid-five').textContent = `Humidity: `+ forecastData.list[37].main.humidity + `%`;
+        
+    }
+
+</script>   
+</body>
+</html>
