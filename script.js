@@ -1,0 +1,179 @@
+async function fetchWeather(){
+    console.log(`it should be fetching something`);
+
+    var city = document.querySelector('#searchCity').value;
+
+    var APIkey = "166a433c57516f51dfab1f7edaed8413";
+    var queryURL = "https://api.openweathermap.org/data/2.5/weather?q="+ city + "&appid=" + APIkey;
+
+    $.ajax({ url: queryURL, method: "GET" }).then( displayWeather ) ;
+}
+
+function displayWeather ( cityData ) {
+    console.log (`[displayWeather-cityData]`, cityData);
+
+    renderButtons(cityData.name);
+
+    document.querySelector('.city-name').textContent = cityData.name;
+
+    var iconURL = "http://openweathermap.org/img/w/" + cityData.weather[0].icon + ".png";
+    var cityIcon = $("<img>");
+    cityIcon.attr("src", iconURL);
+    $('.city-name').append(cityIcon); 
+
+    var timeStamp = (cityData.dt)*1000;
+    var date_ob = new Date(timeStamp);
+    var year = date_ob.getFullYear();
+    var month = ("0" + (date_ob.getMonth() + 1)).slice(-2);
+    var date = ("0" + date_ob.getDate()).slice(-2);
+    console.log( month + "." + date + "." + year);
+    document.querySelector('.date').textContent = month + "/" + date + "/" + year;
+
+    document.querySelector('.temperature').textContent = `Temperature: `+ (cityData.main.temp - 273.15).toFixed(1) + `°C`;
+    document.querySelector('.humidity').textContent = `Humidity: `+ cityData.main.humidity + `%`;
+    document.querySelector('.wind-speed').textContent = `Wind Speed: ` + (cityData.wind.speed * 2.2369).toFixed(1) + ` MPH`;
+
+    var latitude = cityData.coord.lat;
+    var longitude = cityData.coord.lon;
+    fetchUVindex (latitude, longitude);
+
+}
+
+function fetchUVindex (latitude, longitude) {
+    var APIkey = "166a433c57516f51dfab1f7edaed8413";
+    var uvURL = "http://api.openweathermap.org/data/2.5/uvi?appid=" + APIkey + "&lat=" + latitude + "&lon=" + longitude;
+    $.ajax({ url: uvURL, method: "GET" }).then( displayUVindex )
+}
+
+function displayUVindex (UVindexData) {
+    console.log ('[displayUVindex', UVindexData);
+    document.querySelector('.uv-index').innerHTML = 
+    `UV Index: <span id='uv-color'>${UVindexData.value}</span>`;
+    
+    if ( 0 <= UVindexData.value && UVindexData.value <= 2 ){
+        $('#uv-color').addClass('green');
+    }
+    else if ( 3 <= UVindexData.value && UVindexData.value <= 5 ){
+        $('#uv-color').addClass('yellow');
+    } 
+    else if ( 6 <= UVindexData.value && UVindexData.value <= 7 ){
+        $('#uv-color').addClass('orange');
+    }
+    else if ( 8 <= UVindexData.value && UVindexData.value <= 10 ){
+        $('#uv-color').addClass('red');
+    }
+    else if ( UVindexData >= 11 ) {
+        $('#uv-color').addClass('violet');
+    }
+
+    fetchForecast();
+}
+
+function fetchForecast () {    
+    var city = document.querySelector('#searchCity').value;
+    var APIkey = "166a433c57516f51dfab1f7edaed8413";
+    var forecastURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" +APIkey;
+
+    $.ajax({ url: forecastURL, method: "GET" }).then( displayForecast ) ;
+}
+
+function displayForecast (forecastData) {
+    console.log(`[display forecastAPI]`, forecastData );
+
+    // for (i=8; i<forecastData.list.length; i+8){
+    //     document.querySelector('.row-forecast').innerHTML = 
+    //         `<div class="col">
+    //             <div class='date'></div>
+    //             <div class='icon'>-</div>
+    //             <div class='temp'>Temp: ${(forecastData.list[i].main.temp - 273.15).toFixed(1)} °C</div>
+    //             <div class='humid'>-</div>
+    //         </div>`
+    //     }
+    // var fiveiconURL = "http://openweathermap.org/img/w/" + forecastData.list[5].weather[0].icon + ".png";
+    // var fivedayIcon = $("<img>");
+    // fivedayIcon.attr("src", fiveiconURL);
+    // $('.date-one').append(fivedayIcon); 
+
+    var timeStampOne = new Date ((forecastData.list[7].dt)*1000) ;
+    var year = timeStampOne.getFullYear();
+    var month = ("0" + (timeStampOne.getMonth() + 1)).slice(-2);
+    var date = ("0" + timeStampOne.getDate()).slice(-2);
+    document.querySelector('.date-one').textContent = month + "/" + date + "/" + year;
+
+    var timeStampTwo = new Date ((forecastData.list[15].dt)*1000) ;
+    var year = timeStampTwo.getFullYear();
+    var month = ("0" + (timeStampTwo.getMonth() + 1)).slice(-2);
+    var date = ("0" + timeStampTwo.getDate()).slice(-2);
+    document.querySelector('.date-two').textContent = month + "/" + date + "/" + year;
+
+    var timeStampThree = new Date ((forecastData.list[23].dt)*1000) ;
+    var year = timeStampThree.getFullYear();
+    var month = ("0" + (timeStampThree.getMonth() + 1)).slice(-2);
+    var date = ("0" + timeStampThree.getDate()).slice(-2);
+    document.querySelector('.date-three').textContent = month + "/" + date + "/" + year;
+
+    var timeStampFour = new Date ((forecastData.list[31].dt)*1000) ;
+    var year = timeStampFour.getFullYear();
+    var month = ("0" + (timeStampFour.getMonth() + 1)).slice(-2);
+    var date = ("0" + timeStampFour.getDate()).slice(-2);
+    document.querySelector('.date-four').textContent = month + "/" + date + "/" + year;
+
+    var timeStampFive = new Date ((forecastData.list[39].dt)*1000) ;
+    var year = timeStampFive.getFullYear();
+    var month = ("0" + (timeStampFive.getMonth() + 1)).slice(-2);
+    var date = ("0" + timeStampFive.getDate()).slice(-2);
+    document.querySelector('.date-five').textContent = month + "/" + date + "/" + year;
+
+    var oneiconURL = "http://openweathermap.org/img/w/" + forecastData.list[7].weather[0].icon + ".png";
+    var onedayIcon = $("<img>");
+    onedayIcon.attr("src", oneiconURL);
+    $('.date-one').append(onedayIcon);
+
+    var twoiconURL = "http://openweathermap.org/img/w/" + forecastData.list[15].weather[0].icon + ".png";
+    var twodayIcon = $("<img>");
+    twodayIcon.attr("src", twoiconURL);
+    $('.date-two').append(twodayIcon); 
+
+    var threeiconURL = "http://openweathermap.org/img/w/" + forecastData.list[23].weather[0].icon + ".png";
+    var threedayIcon = $("<img>");
+    threedayIcon.attr("src", threeiconURL);
+    $('.date-three').append(threedayIcon); 
+
+    var fouriconURL = "http://openweathermap.org/img/w/" + forecastData.list[31].weather[0].icon + ".png";
+    var fourdayIcon = $("<img>");
+    fourdayIcon.attr("src", fouriconURL);
+    $('.date-four').append(fourdayIcon); 
+
+    var fiveiconURL = "http://openweathermap.org/img/w/" + forecastData.list[39].weather[0].icon + ".png";
+    var fivedayIcon = $("<img>");
+    fivedayIcon.attr("src", fiveiconURL);
+    $('.date-five').append(fivedayIcon); 
+
+   
+    document.querySelector('.temp-one').textContent = `Temp: `+ (forecastData.list[7].main.temp - 273.15).toFixed(1) + `°C`;
+    document.querySelector('.temp-two').textContent = `Temp: `+ (forecastData.list[15].main.temp - 273.15).toFixed(1) + `°C`;
+    document.querySelector('.temp-three').textContent = `Temp: `+ (forecastData.list[23].main.temp - 273.15).toFixed(1) + `°C`;
+    document.querySelector('.temp-four').textContent = `Temp: `+ (forecastData.list[31].main.temp - 273.15).toFixed(1) + `°C`;
+    document.querySelector('.temp-five').textContent = `Temp: `+ (forecastData.list[39].main.temp - 273.15).toFixed(1) + `°C`;
+
+    document.querySelector('.humid-one').textContent = `Humidity: `+ forecastData.list[7].main.humidity + `%`;
+    document.querySelector('.humid-two').textContent = `Humidity: `+ forecastData.list[15].main.humidity + `%`;
+    document.querySelector('.humid-three').textContent = `Humidity: `+ forecastData.list[23].main.humidity + `%`;
+    document.querySelector('.humid-four').textContent = `Humidity: `+ forecastData.list[31].main.humidity + `%`;
+    document.querySelector('.humid-five').textContent = `Humidity: `+ forecastData.list[39].main.humidity + `%`;
+    
+}
+
+function renderButtons(city) {
+    $('#buttons-view').empty();
+
+    var searchedCity = $("<button id='place'>");
+
+    searchedCity.addClass('btn btn-light');
+    searchedCity.attr('data-name', city);
+    searchedCity.text(city);
+    searchedCity.css("background-color", "lightblue");
+    searchedCity.css("width", "200px");
+    $('#buttons-view').append(searchedCity);
+    
+}

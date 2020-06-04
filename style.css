@@ -19,18 +19,38 @@ h3 {
     height: 300px;
     margin: 20px 10px;
     padding-top: 30px;
+    padding-bottom: 60px;
     padding-left: 15px;
     line-height: 2;
-}
-
-.info {
     font-size: 20px;
 }
 
-.col {
-    width: 100%;
-    height: 10rem;
-    text-align: center;
+.green{
+    background-color: green;
+    color: white;
+    padding: 5px;
+    border-radius: 3px;
+}
+.yellow {
+    background-color: yellow;
+    padding: 5px;
+    border-radius: 3px;
+}
+.orange {
+    background-color: orange;
+    padding: 5px;
+    border-radius: 3px;
+}
+.red {
+    background-color: red;
+    color: white;
+    padding: 5px;
+    border-radius: 3px;
+}
+.violet {
+    background-color: violet;
+    padding: 5px;
+    border-radius: 3px;
 }
 
 .first-day {
@@ -39,4 +59,12 @@ h3 {
 
 .fifth-day {
     margin-right: 20px;
+}
+
+.five-day-style {
+    margin-right: 10px;
+    border-radius: 3px;
+    background-color: lightblue;
+    padding: 20px 10px;
+    text-align: center;   
 }
