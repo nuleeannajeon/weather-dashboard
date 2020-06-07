@@ -12,7 +12,7 @@ async function fetchWeather(){
 function displayWeather ( cityData ) {
     console.log (`[displayWeather-cityData]`, cityData);
 
-    renderButtons(cityData.name);
+    saveSearchedCity(cityData.name);
 
     document.querySelector('.city-name').textContent = cityData.name;
 
@@ -79,20 +79,6 @@ function fetchForecast () {
 
 function displayForecast (forecastData) {
     console.log(`[display forecastAPI]`, forecastData );
-
-    // for (i=8; i<forecastData.list.length; i+8){
-    //     document.querySelector('.row-forecast').innerHTML = 
-    //         `<div class="col">
-    //             <div class='date'></div>
-    //             <div class='icon'>-</div>
-    //             <div class='temp'>Temp: ${(forecastData.list[i].main.temp - 273.15).toFixed(1)} °C</div>
-    //             <div class='humid'>-</div>
-    //         </div>`
-    //     }
-    // var fiveiconURL = "http://openweathermap.org/img/w/" + forecastData.list[5].weather[0].icon + ".png";
-    // var fivedayIcon = $("<img>");
-    // fivedayIcon.attr("src", fiveiconURL);
-    // $('.date-one').append(fivedayIcon); 
 
     var timeStampOne = new Date ((forecastData.list[7].dt)*1000) ;
     var year = timeStampOne.getFullYear();
@@ -164,16 +150,40 @@ function displayForecast (forecastData) {
     
 }
 
-function renderButtons(city) {
-    $('#buttons-view').empty();
-
-    var searchedCity = $("<button id='place'>");
-
-    searchedCity.addClass('btn btn-light');
-    searchedCity.attr('data-name', city);
-    searchedCity.text(city);
-    searchedCity.css("background-color", "lightblue");
-    searchedCity.css("width", "200px");
-    $('#buttons-view').append(searchedCity);
+function saveSearchedCity (city) {
+    var cityList = localStorage.cityList ? JSON.parse(localStorage.cityList) : [];
     
+
+    if (localStorage.cityList) {
+        cityList = JSON.parse(localStorage.cityList);
+        console.log(`[if]`, cityList);
+        
+        cityList.push (city);
+        localStorage.setItem('cityList', JSON.stringify(cityList));
+    }
+    else {
+        console.log(`[else]`, cityList);
+        
+        cityList.push (city);
+        localStorage.setItem('cityList', JSON.stringify(cityList));
+    }
+
+  renderButtons(cityList);
 }
+
+function renderButtons(cityList) {
+    
+    var buttonViewEl = document.querySelector('#buttons-view');
+    
+    buttonViewEl.innerHTML='';
+
+    cityList.forEach (
+        function (item){
+        buttonViewEl.innerHTML += 
+        `
+        <button class='btn btn-light' data-name='city' style='background-color: lightblue; width: 200px'>${item}</button>
+        `
+        }
+    )
+}
+
