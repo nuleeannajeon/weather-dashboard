@@ -16,7 +16,7 @@ function displayWeather ( cityData ) {
 
     document.querySelector('.city-name').textContent = cityData.name;
 
-    var iconURL = "http://openweathermap.org/img/w/" + cityData.weather[0].icon + ".png";
+    var iconURL = "https://openweathermap.org/img/w/" + cityData.weather[0].icon + ".png";
     var cityIcon = $("<img>");
     cityIcon.attr("src", iconURL);
     $('.city-name').append(cityIcon); 
@@ -41,7 +41,7 @@ function displayWeather ( cityData ) {
 
 function fetchUVindex (latitude, longitude) {
     var APIkey = "166a433c57516f51dfab1f7edaed8413";
-    var uvURL = "http://api.openweathermap.org/data/2.5/uvi?appid=" + APIkey + "&lat=" + latitude + "&lon=" + longitude;
+    var uvURL = "https://api.openweathermap.org/data/2.5/uvi?appid=" + APIkey + "&lat=" + latitude + "&lon=" + longitude;
     $.ajax({ url: uvURL, method: "GET" }).then( displayUVindex )
 }
 
@@ -72,7 +72,7 @@ function displayUVindex (UVindexData) {
 function fetchForecast () {    
     var city = document.querySelector('#searchCity').value;
     var APIkey = "166a433c57516f51dfab1f7edaed8413";
-    var forecastURL = "http://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" +APIkey;
+    var forecastURL = "https://api.openweathermap.org/data/2.5/forecast?q=" + city + "&appid=" +APIkey;
 
     $.ajax({ url: forecastURL, method: "GET" }).then( displayForecast ) ;
 }
