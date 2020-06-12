@@ -13,7 +13,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>  
     <script src="script.js"></script>
 </head>
-<body>
+<body onload="renderButtons()">
     <header>
         <nav class="navbar navbar-dark bg-dark justify-content-center" style="color:white;">
             Weather Dashboard
@@ -29,6 +29,7 @@
                         <button class="btn btn-outline-success my-2" onclick="fetchWeather()" type="submit"><i class="fa fa-search"></i></button>
                     </div>
                 <div id="buttons-view"></div>
+                <button class="btn btn-outline-danger my-2" onclick="clearRenderedList()">Clear</button>             
                 <br>
                 </nav>
             </div>

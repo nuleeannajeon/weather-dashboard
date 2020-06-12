@@ -110,32 +110,31 @@ function displayForecast (forecastData) {
     var date = ("0" + timeStampFive.getDate()).slice(-2);
     document.querySelector('.date-five').textContent = month + "/" + date + "/" + year;
 
-    var oneiconURL = "http://openweathermap.org/img/w/" + forecastData.list[7].weather[0].icon + ".png";
+    var oneiconURL = "https://openweathermap.org/img/w/" + forecastData.list[7].weather[0].icon + ".png";
     var onedayIcon = $("<img>");
     onedayIcon.attr("src", oneiconURL);
     $('.date-one').append(onedayIcon);
 
-    var twoiconURL = "http://openweathermap.org/img/w/" + forecastData.list[15].weather[0].icon + ".png";
+    var twoiconURL = "https://openweathermap.org/img/w/" + forecastData.list[15].weather[0].icon + ".png";
     var twodayIcon = $("<img>");
     twodayIcon.attr("src", twoiconURL);
     $('.date-two').append(twodayIcon); 
 
-    var threeiconURL = "http://openweathermap.org/img/w/" + forecastData.list[23].weather[0].icon + ".png";
+    var threeiconURL = "https://openweathermap.org/img/w/" + forecastData.list[23].weather[0].icon + ".png";
     var threedayIcon = $("<img>");
     threedayIcon.attr("src", threeiconURL);
     $('.date-three').append(threedayIcon); 
 
-    var fouriconURL = "http://openweathermap.org/img/w/" + forecastData.list[31].weather[0].icon + ".png";
+    var fouriconURL = "https://openweathermap.org/img/w/" + forecastData.list[31].weather[0].icon + ".png";
     var fourdayIcon = $("<img>");
     fourdayIcon.attr("src", fouriconURL);
     $('.date-four').append(fourdayIcon); 
 
-    var fiveiconURL = "http://openweathermap.org/img/w/" + forecastData.list[39].weather[0].icon + ".png";
+    var fiveiconURL = "https://openweathermap.org/img/w/" + forecastData.list[39].weather[0].icon + ".png";
     var fivedayIcon = $("<img>");
     fivedayIcon.attr("src", fiveiconURL);
     $('.date-five').append(fivedayIcon); 
 
-   
     document.querySelector('.temp-one').textContent = `Temp: `+ (forecastData.list[7].main.temp - 273.15).toFixed(1) + `°C`;
     document.querySelector('.temp-two').textContent = `Temp: `+ (forecastData.list[15].main.temp - 273.15).toFixed(1) + `°C`;
     document.querySelector('.temp-three').textContent = `Temp: `+ (forecastData.list[23].main.temp - 273.15).toFixed(1) + `°C`;
@@ -147,13 +146,11 @@ function displayForecast (forecastData) {
     document.querySelector('.humid-three').textContent = `Humidity: `+ forecastData.list[23].main.humidity + `%`;
     document.querySelector('.humid-four').textContent = `Humidity: `+ forecastData.list[31].main.humidity + `%`;
     document.querySelector('.humid-five').textContent = `Humidity: `+ forecastData.list[39].main.humidity + `%`;
-    
 }
 
 function saveSearchedCity (city) {
     var cityList = localStorage.cityList ? JSON.parse(localStorage.cityList) : [];
     
-
     if (localStorage.cityList) {
         cityList = JSON.parse(localStorage.cityList);
         console.log(`[if]`, cityList);
@@ -167,23 +164,28 @@ function saveSearchedCity (city) {
         cityList.push (city);
         localStorage.setItem('cityList', JSON.stringify(cityList));
     }
-
-  renderButtons(cityList);
+    renderButtons();
 }
 
-function renderButtons(cityList) {
-    
+function renderButtons() {
     var buttonViewEl = document.querySelector('#buttons-view');
-    
     buttonViewEl.innerHTML='';
 
-    cityList.forEach (
-        function (item){
-        buttonViewEl.innerHTML += 
-        `
-        <button class='btn btn-light' data-name='city' style='background-color: lightblue; width: 200px'>${item}</button>
-        `
-        }
-    )
+    if (localStorage.cityList){
+        var searchedListStorage = JSON.parse(localStorage.cityList);
+        searchedListStorage.forEach (
+            function (item){
+            buttonViewEl.innerHTML += 
+            `
+            <button class='btn btn-light' data-name='city' style='background-color: lightblue; width: 200px'>${item}</button>
+            `
+            }
+        )
+    }
+}
+
+function clearRenderedList() {
+    localStorage.removeItem("cityList");
+    renderButtons();
 }
 
